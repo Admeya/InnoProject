@@ -1,7 +1,5 @@
 package main.java.ru.innopolis.itcources.lab1;
 
-import java.util.concurrent.*;
-
 /**
  * Created by Ирина on 06.02.2017.
  * <p>
@@ -14,18 +12,16 @@ import java.util.concurrent.*;
  * <p>
  * 1432
  */
-public class ProcessingNumbersFromResources extends Thread {
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        ExecutorService executor = Executors.newFixedThreadPool(args.length);
-        int sum = 0;
-        for (int i = 0; i < args.length; i++) {
-            String fileNameIn = args[i];
-            Callable<Integer> callable = new SumCounting(fileNameIn, i);
-            Future<Integer> future = executor.submit(callable);
-            sum = sum + (int) future.get();
-            System.out.println("sum = " + sum);
-        }
+public class RunThreads extends Thread {
+    String fileNameIn;
+    int countThread;
+
+    RunThreads(String fileNameIn, int countThread) {
+        this.fileNameIn = fileNameIn;
+        this.countThread = countThread;
     }
 
-
+    public void run() {
+        SumCounting countSum = new SumCounting(fileNameIn, countThread);
+    }
 }
