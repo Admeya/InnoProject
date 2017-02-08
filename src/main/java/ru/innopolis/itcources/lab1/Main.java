@@ -8,12 +8,7 @@ public class Main {
         String fileNameIn = null;
         for (int i = 0; i < args.length; i++) {
             fileNameIn = args[i];
-            RunThreads thread = new RunThreads(fileNameIn, i);
-            thread.start();
-//            try {
-//                thread.join();
-//                // действия после завершения работы потока
-//            } catch (InterruptedException x) {}
+            new RunThreads(fileNameIn, i).start();
         }
     }
 }

@@ -13,8 +13,8 @@ package main.java.ru.innopolis.itcources.lab1;
  * 1432
  */
 public class RunThreads extends Thread {
-    String fileNameIn;
-    int countThread;
+    private String fileNameIn;
+    private int countThread;
 
     RunThreads(String fileNameIn, int countThread) {
         this.fileNameIn = fileNameIn;

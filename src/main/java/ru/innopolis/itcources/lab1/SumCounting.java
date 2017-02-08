@@ -11,9 +11,11 @@ public class SumCounting {
     public static volatile int sum = 0;
     int countThread;
 
+
     SumCounting(String fileNameIn, int countThread) {
         this.countThread = countThread;
         Scanner sc = null;
+
 
         File file = new File(fileNameIn);
         try {
@@ -21,8 +23,12 @@ public class SumCounting {
             while (sc.hasNextLine()) {
                 int nextNumber = sc.nextInt();
                 synchronized (this) {
-                    sum = sum + isPositiveAndEvenNumbers(nextNumber);
-                    System.out.println("work thread " + countThread + " sum = " + sum);
+                    int tmpNumber = isPositiveAndEvenNumbers(nextNumber);
+                    if (tmpNumber > 0) {
+                        System.out.print("Work thread '" + countThread + "' sum = " + sum + " + " + tmpNumber + ". Sum = ");
+                        sum = sum + tmpNumber;
+                        System.out.println(sum);
+                    }
                 }
             }
             sc.close();
@@ -33,10 +39,10 @@ public class SumCounting {
 
     public int isPositiveAndEvenNumbers(int num) {
         if ((num % 2 == 0) && (num > 0)) {
-            System.out.println("find positive and even number! " + num + " in " + this.countThread + " thread");
+            System.out.println("Find positive and even number! This is number " + num + " in '" + this.countThread + "' thread");
             return num;
         } else {
-            System.out.println("Number " + num + " in " + this.countThread + " thread is unsuitable for this example ");
+            System.out.println("Number " + num + " in '" + this.countThread + "' thread is unsuitable for this example ");
             num = 0;
         }
         return num;
