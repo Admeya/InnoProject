@@ -1,23 +1,16 @@
 package main.java.ru.innopolis.itcources.lab1;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 public class RunThreads extends Thread {
-    private File fileNameIn;
-    private int countThread;
+    private volatile File fileNameIn;
+    private volatile int countThread;
 
-
-    RunThreads(File fileNameIn, int countThread) throws FileNotFoundException {
+    RunThreads(File fileNameIn, int countThread) {
         this.fileNameIn = fileNameIn;
         this.countThread = countThread;
     }
-
     public void run() {
-        try {
-            new SumCounting(fileNameIn, countThread);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        new SumCounting(fileNameIn, countThread);
     }
 }

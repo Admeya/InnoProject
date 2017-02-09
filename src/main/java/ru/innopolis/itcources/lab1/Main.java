@@ -26,7 +26,8 @@ public class Main {
             File file = new File(fileNameIn);
             try {
                 if (file.exists()) {
-                    new RunThreads(file, i).start();
+                    Thread thread = new RunThreads(file, i);
+                    thread.start();
                 } else {
                     isInterrupt = true;
                     throw new FileNotFoundException();
@@ -38,7 +39,6 @@ public class Main {
                     break;
                 }
             }
-
         }
     }
 }

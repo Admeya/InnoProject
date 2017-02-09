@@ -11,37 +11,48 @@ import java.util.regex.Pattern;
 public class SumCounting {
     public static volatile int sum = 0;
     int countThread;
+    File file = null;
 
-    SumCounting(File file, int countThread) throws FileNotFoundException {
+    SumCounting(File file, int countThread) {
         this.countThread = countThread;
-        Scanner sc = null;
+        this.file = file;
 
-        sc = new Scanner(file);
-        while (sc.hasNextLine()) {
-            synchronized (this) {
-                if (Main.isInterrupt)
-                    break;
-                else {
-                    String numForAnalisys = sc.next();
-                    if (isNumberCorrect(numForAnalisys)) {
-                        int nextNumber = getSumCount(numForAnalisys);
-                        if (nextNumber > 0) {
-                            System.out.print("Thread '" + countThread + "'. Counting sum... " + sum + " + " + nextNumber + " = ");
-                            sum = sum + nextNumber;
-                            System.out.println(sum);
-                        }
-                    } else {
-                        try {
-                            Main.isInterrupt = true;
-                            throw new InterruptedException("Thread '" + this.countThread + "'. Yoooohooooohooo!!!! And a bottle with Rom!!! This is not correct number '" + numForAnalisys + "'");
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+        countSum();
+    }
+
+    public void countSum() {
+        try {
+            Scanner sc = new Scanner(file);
+            while (sc.hasNextLine()) {
+                synchronized (this) {
+                    if (Main.isInterrupt)
+                        break;
+                    else {
+                        if (sc.hasNext()) {
+                            String numForAnalisys = sc.next();
+                            if (isNumberCorrect(numForAnalisys)) {
+                                int nextNumber = getSumCount(numForAnalisys);
+                                if (nextNumber > 0) {
+                                    System.out.print("Thread '" + countThread + "'. Counting sum... " + sum + " + " + nextNumber + " = ");
+                                    sum = sum + nextNumber;
+                                    System.out.println(sum);
+                                }
+                            } else {
+                                try {
+                                    Main.isInterrupt = true;
+                                    throw new InterruptedException("Thread '" + this.countThread + "'. Yoooohooooohooo!!!! And a bottle with Rom!!! This is not correct number '" + numForAnalisys + "'");
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
                 }
             }
+            sc.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        sc.close();
     }
 
     public boolean isNumberCorrect(String number) {
