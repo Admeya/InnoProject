@@ -12,47 +12,58 @@ public class SumCounting {
     public static volatile int sum = 0;
     int countThread;
 
-
-    SumCounting(String fileNameIn, int countThread) {
+    SumCounting(File file, int countThread) throws FileNotFoundException {
         this.countThread = countThread;
         Scanner sc = null;
 
-
-        File file = new File(fileNameIn);
-        try {
-            sc = new Scanner(file);
-            while (sc.hasNextLine()) {
-                synchronized (this) {
-                    int nextNumber = isNumberCorrect(sc.next());
-                    if (nextNumber > 0) {
-                        System.out.print("Work thread '" + countThread + "' sum = " + sum + " + " + nextNumber + ". Sum = ");
-                        sum = sum + nextNumber;
-                        System.out.println(sum);
+        sc = new Scanner(file);
+        while (sc.hasNextLine()) {
+            synchronized (this) {
+                if (Main.isInterrupt)
+                    break;
+                else {
+                    String numForAnalisys = sc.next();
+                    if (isNumberCorrect(numForAnalisys)) {
+                        int nextNumber = getSumCount(numForAnalisys);
+                        if (nextNumber > 0) {
+                            System.out.print("Thread '" + countThread + "'. Counting sum... " + sum + " + " + nextNumber + " = ");
+                            sum = sum + nextNumber;
+                            System.out.println(sum);
+                        }
+                    } else {
+                        try {
+                            Main.isInterrupt = true;
+                            throw new InterruptedException("Thread '" + this.countThread + "'. Yoooohooooohooo!!!! And a bottle with Rom!!! This is not correct number '" + numForAnalisys + "'");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-            sc.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+        sc.close();
     }
 
-    public int isNumberCorrect(String number) {
-        int num = 0;
+    public boolean isNumberCorrect(String number) {
         Pattern p = Pattern.compile("(^-\\d*$)|(^\\d*$)");
-        if (p.matcher(number).matches()) {
-            num = Integer.parseInt(number);
+        if (!p.matcher(number).matches()) {
+            Main.isInterrupt = true;
+        } else
+            return true;
 
-            if ((num % 2 == 0) && (num > 0)) {
-                System.out.println("Find positive and even number! This is number " + num + " in '" + this.countThread + "' thread");
-                return num;
-            } else {
-                System.out.println("Number " + num + " in '" + this.countThread + "' thread is unsuitable for this example ");
-                num = 0;
-            }
+        return false;
+    }
+
+    public int getSumCount(String number) {
+        int num = 0;
+        num = Integer.parseInt(number);
+
+        if ((num % 2 == 0) && (num > 0)) {
+            System.out.println("Thread '" + this.countThread + "'. Find positive and even number! This is number " + num);
+            return num;
         } else {
-            throw new IllegalArgumentException("Yoooohooooohooo!!!! And a bottle with Rom!!! This is not correct number '" + number + "'");
-
+            System.out.println("Thread '" + this.countThread + "'. Number " + num + " thread is unsuitable for this example ");
+            num = 0;
         }
         return num;
     }

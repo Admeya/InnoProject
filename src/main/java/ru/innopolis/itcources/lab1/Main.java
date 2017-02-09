@@ -1,5 +1,8 @@
 package main.java.ru.innopolis.itcources.lab1;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 /**
  * Created by Ирина on 06.02.2017.
  * <p>
@@ -13,11 +16,29 @@ package main.java.ru.innopolis.itcources.lab1;
  * 1432
  */
 public class Main {
+    public static boolean isInterrupt = false;
+
     public static void main(String args[]) {
         String fileNameIn = null;
+
         for (int i = 0; i < args.length; i++) {
             fileNameIn = args[i];
-            new RunThreads(fileNameIn, i).start();
+            File file = new File(fileNameIn);
+            try {
+                if (file.exists()) {
+                    new RunThreads(file, i).start();
+                } else {
+                    isInterrupt = true;
+                    throw new FileNotFoundException();
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("Please, check input parameters, this file is not found " + fileNameIn);
+            } finally {
+                if (isInterrupt) {
+                    break;
+                }
+            }
+
         }
     }
 }
