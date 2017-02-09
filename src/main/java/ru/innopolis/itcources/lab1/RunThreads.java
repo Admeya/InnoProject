@@ -10,7 +10,9 @@ public class RunThreads extends Thread {
         this.fileNameIn = fileNameIn;
         this.countThread = countThread;
     }
+
+    @Override
     public void run() {
-        new SumCounting(fileNameIn, countThread);
+        new OperationsOnResources(fileNameIn, countThread);
     }
 }

@@ -6,20 +6,26 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * Created by Ирина on 07.02.2017.
+ * Выполняются операции по подсчету суммы, проверки на корректность полученных значений,
+ * проверки на четность и неотрицательность *
  */
-public class SumCounting {
+public class OperationsOnResources {
     public static volatile int sum = 0;
     int countThread;
     File file = null;
 
-    SumCounting(File file, int countThread) {
+    OperationsOnResources(File file, int countThread) {
         this.countThread = countThread;
         this.file = file;
 
         countSum();
     }
 
+    /**
+     * Подсчет суммы чисел со всех потоков согласно условию
+     *
+     * @throws InterruptedException если число не пройдено на валидность
+     */
     public void countSum() {
         try {
             Scanner sc = new Scanner(file);
@@ -55,6 +61,12 @@ public class SumCounting {
         }
     }
 
+    /**
+     * Проверка переданного значения на валидность
+     *
+     * @param number Передается считанный из входного потока набор символов
+     * @return true если значение подходит указанной маске (положительные и отрицательные целые числа)
+     */
     public boolean isNumberCorrect(String number) {
         Pattern p = Pattern.compile("(^-\\d*$)|(^\\d*$)");
         if (!p.matcher(number).matches()) {
@@ -65,6 +77,12 @@ public class SumCounting {
         return false;
     }
 
+    /**
+     * Проверка условия "Число, которое войдет в сумму должно быть четным и положительным"
+     *
+     * @param number передается строка, преобразовывается в число и проверяется на нужное условие
+     * @return num = 0 если число не подходит под условие и приведенная к типу int строка, если условие пройдено
+     */
     public int getSumCount(String number) {
         int num = 0;
         num = Integer.parseInt(number);
