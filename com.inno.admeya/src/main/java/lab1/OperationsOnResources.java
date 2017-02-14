@@ -1,4 +1,4 @@
-package main.java.ru.innopolis.itcources.lab1;
+package lab1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +18,15 @@ public class OperationsOnResources {
         this.countThread = countThread;
         this.file = file;
 
-        countSum();
+        readSymbolAndCountSum();
+    }
+
+    @Override
+    public String toString() {
+        return "OperationsOnResources{" +
+                "countThread=" + countThread +
+                ", file=" + file +
+                '}';
     }
 
     /**
@@ -26,7 +34,8 @@ public class OperationsOnResources {
      *
      * @throws InterruptedException если число не пройдено на валидность
      */
-    public void countSum() {
+    public void readSymbolAndCountSum() {
+        System.out.println(this.toString());
         try {
             Scanner sc = new Scanner(file);
             while (sc.hasNextLine()) {
@@ -38,11 +47,7 @@ public class OperationsOnResources {
                             String numForAnalisys = sc.next();
                             if (isNumberCorrect(numForAnalisys)) {
                                 int nextNumber = getSumCount(numForAnalisys);
-                                if (nextNumber > 0) {
-                                    System.out.print("Thread '" + countThread + "'. Counting sum... " + sum + " + " + nextNumber + " = ");
-                                    sum = sum + nextNumber;
-                                    System.out.println(sum);
-                                }
+                                countingSum(nextNumber, sum);
                             } else {
                                 try {
                                     Main.isInterrupt = true;
@@ -75,6 +80,15 @@ public class OperationsOnResources {
             return true;
 
         return false;
+    }
+
+    public int countingSum(int nextNumber, int previousSum) {
+        if (nextNumber > 0) {
+            System.out.print("Thread '" + countThread + "'. Counting sum... " + previousSum + " + " + nextNumber + " = ");
+            sum = sum + nextNumber;
+            System.out.println(sum);
+        }
+        return sum;
     }
 
     /**

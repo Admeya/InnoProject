@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.inno.admeya.iml" filepath="$PROJECT_DIR$/.idea/modules/com.inno.admeya.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.inno.admeya_main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.inno.admeya_main.iml" group="com.inno.admeya" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.inno.admeya_test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.inno.admeya_test.iml" group="com.inno.admeya" />
       <module fileurl="file://$PROJECT_DIR$/testProjects.iml" filepath="$PROJECT_DIR$/testProjects.iml" />
     </modules>
   </component>

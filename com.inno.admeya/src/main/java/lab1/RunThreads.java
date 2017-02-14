@@ -1,4 +1,4 @@
-package main.java.ru.innopolis.itcources.lab1;
+package lab1;
 
 import java.io.File;
 
@@ -13,6 +13,6 @@ public class RunThreads extends Thread {
 
     @Override
     public void run() {
-        new OperationsOnResources(fileNameIn, countThread);
+        System.out.println(new OperationsOnResources(fileNameIn, countThread));
     }
 }

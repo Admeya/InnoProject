@@ -1,4 +1,4 @@
-package main.java.ru.innopolis.itcources.lab1;
+package lab1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,14 +36,14 @@ public class Main {
             File file = new File(fileNameIn);
             try {
                 if (file.exists()) {
-                    Thread thread = new RunThreads(file, i);
+                    Thread thread = new Thread(new RunThreads(file, i));
                     thread.start();
                 } else {
                     isInterrupt = true;
                     throw new FileNotFoundException();
                 }
             } catch (FileNotFoundException e) {
-                System.out.println("Please, check input parameters, this file is not found " + fileNameIn);
+                System.out.println("Please, check input parameters, this file is not found " + file.getAbsolutePath());
             } finally {
                 if (isInterrupt)
                     break;
