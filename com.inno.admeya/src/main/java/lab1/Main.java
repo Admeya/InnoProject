@@ -27,7 +27,7 @@ public class Main {
         PropertyConfigurator.configure("src/main/resources/log4j.properties");
     }
 
-    public static void main(final String args[]) throws InterruptedException {
+    public static void main(final String args[]) throws InterruptedException, FileNotFoundException {
         final File[] setOfFile = getResourcesNamesAndCheck(args);
         if (!isInterrupt) {
 
@@ -62,12 +62,13 @@ public class Main {
                 if (!file.exists()) {
                     setOfFiles = null;
                     isInterrupt = true;
-                    throw new FileNotFoundException();
+                    throw new FileNotFoundException("Please, check input parameters, this file is not found " + file.getAbsolutePath());
+
                 } else {
                     setOfFiles[i] = file;
                 }
             } catch (FileNotFoundException e) {
-                logger.error("Please, check input parameters, this file is not found " + file.getAbsolutePath());
+                e.printStackTrace();
             } finally {
                 if (isInterrupt) {
                     break;

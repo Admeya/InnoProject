@@ -1,19 +1,20 @@
 package lab1;
 
+
 import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 /**
  * Created by Ирина on 09.02.2017.
  */
 public class TestArgs {
-    @Ignore
+
     @Test
     public void allArgumentsIsTrue() {
         String[] trueMas = {"src/main/resources/inp4.txt", "src/main/resources/inp5.txt", "src/main/resources/inp6.txt", "src/main/resources/inp1.txt", "src/main/resources/inp2.txt", "src/main/resources/inp6.txt"};
@@ -22,7 +23,6 @@ public class TestArgs {
         Assert.assertNotNull(fileOfMas);
     }
 
-    @Ignore
     @Test
     public void oneArgumentsIsFalse() {
         String[] trueMas = {"src/main/resources/inp4.txt", "/src/main/resources/inp5.txt", "src/main/resources/inp6.txt", "src/main/resources/inp1.txt", "src/main/resources/inp2.txt", "src/main/resources/inp6.txt"};
@@ -31,7 +31,6 @@ public class TestArgs {
         Assert.assertNull(fileOfMas);
     }
 
-    @Ignore
     @Test
     public void countSumOddAndPositive() {
         String[] str = {"2", "4", "16", "20", "1200"};
@@ -40,7 +39,6 @@ public class TestArgs {
         }
     }
 
-    @Ignore
     @Test
     public void countSumNonSuitable() {
         String[] str = {"1", "-5", "9", "11", "95"};
@@ -72,16 +70,16 @@ public class TestArgs {
         Assert.assertTrue("IncorrectNumber 000", OperationsOnResources.isNumberCorrect("000"));
     }
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void throwsFileNotFoundExceptionWithMessage() throws FileNotFoundException {
+    @Test(expected = FileNotFoundException.class)
+    public void throwsFileNotFoundExceptionWithMessage() {
         String[] args = {"/src/main/resources/inp5.txt"};
-        Main.getResourcesNamesAndCheck(args);
-        thrown.expect(FileNotFoundException.class);
-        thrown.expectMessage("Please, check input parameters, this file is not found " + new File(args[0]).getAbsolutePath());
+        Throwable thrown = catchThrowable(() -> {
+            Main.getResourcesNamesAndCheck(args);
+        });
 
+        assertThat(thrown).isInstanceOf(FileNotFoundException.class);
+        assertThat(thrown.getMessage()).isNotBlank();
+        assertThat(thrown.getMessage()).contains("Please, check input parameters, this file is not found " + new File(args[0]).getAbsolutePath());
     }
 
 }
