@@ -1,5 +1,8 @@
 package lab1;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -10,6 +13,12 @@ import java.util.regex.Pattern;
  * проверки на четность и неотрицательность *
  */
 public class OperationsOnResources {
+    Logger logger = Logger.getLogger(OperationsOnResources.class);
+
+    static {
+        PropertyConfigurator.configure("src/main/resources/log4j.properties");
+    }
+
     public static volatile int sum = 0;
     volatile int countThread;
     volatile File file = null;
@@ -34,7 +43,7 @@ public class OperationsOnResources {
      * @throws InterruptedException если число не пройдено на валидность
      */
     private void readSymbolAndCountSum() {
-        System.out.println(this.toString());
+        logger.trace(this.toString());
         try {
             synchronized (this) {
                 Scanner sc = new Scanner(file);
@@ -50,9 +59,9 @@ public class OperationsOnResources {
                             } else {
                                 try {
                                     Main.isInterrupt = true;
-                                    throw new InterruptedException("Thread '" + this.countThread + "'. Yoooohooooohooo!!!! And a bottle with Rom!!! This is not correct number '" + numForAnalisys + "'");
+                                    throw new InterruptedException("This is not correct number '" + numForAnalisys + "'");
                                 } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                    logger.error(e);
                                 }
                             }
                         }
@@ -83,9 +92,7 @@ public class OperationsOnResources {
 
     public int countingSum(int nextNumber, int previousSum) {
         if (nextNumber > 0) {
-            System.out.print("Thread '" + countThread + "'. Counting sum... " + previousSum + " + " + nextNumber + " = ");
-            sum = sum + nextNumber;
-            System.out.println(sum);
+            logger.trace("Counting sum... " + previousSum + " + " + nextNumber + " = " + (sum = sum + nextNumber));
         }
         return sum;
     }
@@ -101,10 +108,10 @@ public class OperationsOnResources {
         num = Integer.parseInt(number);
 
         if ((num % 2 == 0) && (num > 0)) {
-            System.out.println("Thread '" + this.countThread + "'. Find positive and even number! This is number " + num);
+            logger.trace("Find positive and even number! This is number " + num);
             return num;
         } else {
-            System.out.println("Thread '" + this.countThread + "'. Number " + num + " thread is unsuitable for this example ");
+            logger.trace("Number " + num + " thread is unsuitable for this example ");
             num = 0;
         }
         return num;

@@ -1,7 +1,11 @@
 package lab1;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+
 
 /**
  * @author Быкова Ирина
@@ -16,6 +20,12 @@ import java.io.FileNotFoundException;
  *          По результатам вычислений полученная сумма должна равняться 1432
  */
 public class Main {
+    static Logger logger = Logger.getLogger(Main.class);
+
+    static {
+        PropertyConfigurator.configure("src/main/resources/log4j.properties");
+    }
+
     public static boolean isInterrupt = false;
 
     public static void main(final String args[]) throws InterruptedException {
@@ -26,7 +36,7 @@ public class Main {
                 final int finalI = i;
                 Thread thr = new Thread(new Runnable() {
                     public void run() {
-                        System.out.println(new OperationsOnResources(setOfFile[finalI], finalI));
+                        logger.trace(new OperationsOnResources(setOfFile[finalI], finalI));
                     }
                 });
                 System.out.println(thr);
@@ -58,7 +68,7 @@ public class Main {
                     setOfFiles[i] = file;
                 }
             } catch (FileNotFoundException e) {
-                System.out.println("Please, check input parameters, this file is not found " + file.getAbsolutePath());
+                logger.error("Please, check input parameters, this file is not found " + file.getAbsolutePath());
             } finally {
                 if (isInterrupt) {
                     break;
