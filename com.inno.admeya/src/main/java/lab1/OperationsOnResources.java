@@ -1,7 +1,6 @@
 package lab1;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,28 +12,19 @@ import java.util.regex.Pattern;
  * проверки на четность и неотрицательность *
  */
 public class OperationsOnResources {
-    Logger logger = Logger.getLogger(OperationsOnResources.class);
+    static Logger logger = Logger.getLogger(OperationsOnResources.class);
 
-    static {
-        PropertyConfigurator.configure("src/main/resources/log4j.properties");
-    }
+    public static int sum = 0;
+    File file = null;
 
-    public static volatile int sum = 0;
-    volatile int countThread;
-    volatile File file = null;
-
-    OperationsOnResources(File file, int countThread) {
-        this.countThread = countThread;
+    public OperationsOnResources(File file) {
         this.file = file;
         readSymbolAndCountSum();
     }
 
     @Override
     public String toString() {
-        return "OperationsOnResources{" +
-                "countThread=" + countThread +
-                ", file=" + file +
-                '}';
+        return "OperationsOnResources{" + ", file=" + file + '}';
     }
 
     /**
@@ -54,7 +44,7 @@ public class OperationsOnResources {
                         if (sc.hasNext()) {
                             String numForAnalisys = sc.next();
                             if (isNumberCorrect(numForAnalisys)) {
-                                int nextNumber = getSumCount(numForAnalisys);
+                                int nextNumber = isSuitable(numForAnalisys);
                                 countingSum(nextNumber, sum);
                             } else {
                                 try {
@@ -80,7 +70,7 @@ public class OperationsOnResources {
      * @param number Передается считанный из входного потока набор символов
      * @return true если значение подходит указанной маске (положительные и отрицательные целые числа)
      */
-    public boolean isNumberCorrect(String number) {
+    public static boolean isNumberCorrect(String number) {
         Pattern p = Pattern.compile("(^-\\d*$)|(^\\d*$)");
         if (!p.matcher(number).matches()) {
             Main.isInterrupt = true;
@@ -90,9 +80,9 @@ public class OperationsOnResources {
         return false;
     }
 
-    public int countingSum(int nextNumber, int previousSum) {
+    public static int countingSum(int nextNumber, int previousSum) {
         if (nextNumber > 0) {
-            logger.trace("Counting sum... " + previousSum + " + " + nextNumber + " = " + (sum = sum + nextNumber));
+            logger.trace("Counting sum... " + previousSum + " + " + nextNumber + " = " + (sum = previousSum + nextNumber));
         }
         return sum;
     }
@@ -103,7 +93,7 @@ public class OperationsOnResources {
      * @param number передается строка, преобразовывается в число и проверяется на нужное условие
      * @return num = 0 если число не подходит под условие и приведенная к типу int строка, если условие пройдено
      */
-    public int getSumCount(String number) {
+    public static int isSuitable(String number) {
         int num = 0;
         num = Integer.parseInt(number);
 

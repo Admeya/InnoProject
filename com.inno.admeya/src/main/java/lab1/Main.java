@@ -20,13 +20,12 @@ import java.io.FileNotFoundException;
  *          По результатам вычислений полученная сумма должна равняться 1432
  */
 public class Main {
-    static Logger logger = Logger.getLogger(Main.class);
+    public static volatile boolean isInterrupt = false;
 
+    static Logger logger = Logger.getLogger(Main.class);
     static {
         PropertyConfigurator.configure("src/main/resources/log4j.properties");
     }
-
-    public static boolean isInterrupt = false;
 
     public static void main(final String args[]) throws InterruptedException {
         final File[] setOfFile = getResourcesNamesAndCheck(args);
@@ -36,7 +35,7 @@ public class Main {
                 final int finalI = i;
                 Thread thr = new Thread(new Runnable() {
                     public void run() {
-                        logger.trace(new OperationsOnResources(setOfFile[finalI], finalI));
+                        logger.trace(new OperationsOnResources(setOfFile[finalI]));
                     }
                 });
                 System.out.println(thr);
@@ -54,7 +53,7 @@ public class Main {
      */
     public static File[] getResourcesNamesAndCheck(String args[]) {
         String fileNameIn = null;
-        File[] setOfFiles = new File[10];
+        File[] setOfFiles = new File[args.length];
 
         for (int i = 0; i < args.length; i++) {
             fileNameIn = args[i];
