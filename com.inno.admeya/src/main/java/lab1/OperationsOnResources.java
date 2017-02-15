@@ -11,13 +11,12 @@ import java.util.regex.Pattern;
  */
 public class OperationsOnResources {
     public static volatile int sum = 0;
-    int countThread;
-    File file = null;
+    volatile int countThread;
+    volatile File file = null;
 
     OperationsOnResources(File file, int countThread) {
         this.countThread = countThread;
         this.file = file;
-
         readSymbolAndCountSum();
     }
 
@@ -34,12 +33,12 @@ public class OperationsOnResources {
      *
      * @throws InterruptedException если число не пройдено на валидность
      */
-    public void readSymbolAndCountSum() {
+    private void readSymbolAndCountSum() {
         System.out.println(this.toString());
         try {
-            Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()) {
-                synchronized (this) {
+            synchronized (this) {
+                Scanner sc = new Scanner(file);
+                while (sc.hasNextLine()) {
                     if (Main.isInterrupt)
                         break;
                     else {
@@ -59,8 +58,8 @@ public class OperationsOnResources {
                         }
                     }
                 }
+                sc.close();
             }
-            sc.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
